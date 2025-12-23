@@ -55,7 +55,10 @@ public struct CodeViewer: ViewRepresentable {
         codeView.clearSelection()
         
         codeView.textDidChanged = { text in
-            context.coordinator.set(content: text)
+            //context.coordinator.set(content: text)
+            if content != text && !text.isEmpty{
+                content = text
+            }
             self.textDidChanged?(text)
         }
         
@@ -69,6 +72,8 @@ public struct CodeViewer: ViewRepresentable {
             colorScheme == .dark ? webview.setTheme(darkTheme) : webview.setTheme(lightTheme)
             context.coordinator.set(colorScheme: colorScheme)
         }
+        webview.setContent(content)
+        webview.clearSelection()
     }
     
     // MARK: macOS
