@@ -55,10 +55,10 @@ public struct CodeViewer: ViewRepresentable {
         codeView.clearSelection()
         
         codeView.textDidChanged = { text in
-            //context.coordinator.set(content: text)
-            if content != text && !text.isEmpty{
-                content = text
-            }
+            context.coordinator.set(content: text)
+            // if content != text && !text.isEmpty{
+            //     content = text
+            // }
             self.textDidChanged?(text)
         }
         
@@ -68,12 +68,17 @@ public struct CodeViewer: ViewRepresentable {
     }
     
     private func updateView(_ webview: CodeWebView, context: Context) {
-        if context.coordinator.colorScheme != colorScheme {
-            colorScheme == .dark ? webview.setTheme(darkTheme) : webview.setTheme(lightTheme)
-            context.coordinator.set(colorScheme: colorScheme)
-        }
+        // Update theme if colorScheme changed
+    if context.coordinator.colorScheme != colorScheme {
+        colorScheme == .dark ? webview.setTheme(darkTheme) : webview.setTheme(lightTheme)
+        context.coordinator.set(colorScheme: colorScheme)
+    }
+    
+    // Update content if it changed from outside
+    if context.coordinator.content != content {
         webview.setContent(content)
-        webview.clearSelection()
+        context.coordinator.set(content: content)
+    }
     }
     
     // MARK: macOS
